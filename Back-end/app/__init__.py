@@ -1,8 +1,11 @@
 from flask import Flask
-from .extensions import db
+from .extensions import db, ma
 from .config import Config
-from .model import Song,Album,Artist 
+from .model import Song, Album, Artist
+from flask_cors import CORS
 
+app = Flask(__name__)
+CORS(app)
 import os
 from dotenv import load_dotenv
 
@@ -16,6 +19,7 @@ def create_db(app):
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
+    ma.init_app(app)
     db.init_app(app)
     create_db(app)
     from .models.songs.controller import songs

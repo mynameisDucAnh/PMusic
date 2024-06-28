@@ -1,4 +1,4 @@
-from . import db
+from app.extensions import db
 
 class Artist(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -6,8 +6,9 @@ class Artist(db.Model):
     image_path = db.Column(db.String(255), nullable=True)
     bio = db.Column(db.Text, nullable=True)
 
-    def __init__(self, name, bio=None):
+    def __init__(self, name, bio=None, image_path=None):
         self.name = name
+        self.image_path = image_path
         self.bio = bio
 
 class Album(db.Model):
@@ -28,7 +29,7 @@ class Song(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     album_id = db.Column(db.Integer, db.ForeignKey('album.id'), nullable=False)
     title = db.Column(db.String(100), nullable=False)
-    duration = db.Column(db.Time, nullable=True)
+    duration = db.Column(db.String(8), nullable=True)  # String to store HH:MM:SS
     file_path = db.Column(db.String(255), nullable=False)
     image_path = db.Column(db.String(255), nullable=True)
     album = db.relationship('Album', backref=db.backref('songs', lazy=True))
@@ -36,7 +37,3 @@ class Song(db.Model):
     def __init__(self, album_id, title, duration=None, file_path=None, image_path=None):
         self.album_id = album_id
         self.title = title
-        self.duration = duration
-        self.file_path = file_path
-        self.image_path = image_path  # Khởi tạo giá trị cho image_path
-
